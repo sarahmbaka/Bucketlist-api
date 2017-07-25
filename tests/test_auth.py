@@ -37,6 +37,18 @@ class TestAuthRegister(unittest.TestCase):
 
 
 
+    def test_already_registered_username(self):
+        """Test that a user cannot be registered twice."""
+        res = self.client.post('/auth/register', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        second_res = self.client.post('/auth/register', data=self.user_data)
+        self.assertEqual(second_res.status_code, 409)
+
+    
+
+    def tearDown(self):
+        db.drop_all()
+        self.app_context.pop()
 
 if __name__ == "__main__":
     unittest.main()
