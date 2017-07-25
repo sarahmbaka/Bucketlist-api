@@ -22,4 +22,18 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    
+    def encode_auth_token(self, user_id):
+        try:
+            payload = {
+                'exp': datetime.utcnow() + timedelta(days=0, minutes=33),
+                'iat': datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                os.getenv("SECRET"),
+                algorithm='HS256'
+            ).decode("utf-8")
+
+        except Exception as e:
+            print(e)
