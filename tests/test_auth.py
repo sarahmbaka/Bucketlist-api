@@ -8,7 +8,6 @@ from config import app_config
 
 app = create_app("testing")
 
-
 class TestAuthRegister(unittest.TestCase):
     """Test case for the authentication blueprint."""
 
@@ -36,7 +35,6 @@ class TestAuthRegister(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
 
 
-
     def test_already_registered_username(self):
         """Test that a user cannot be registered twice."""
         res = self.client.post('/auth/register', data=self.user_data)
@@ -44,11 +42,23 @@ class TestAuthRegister(unittest.TestCase):
         second_res = self.client.post('/auth/register', data=self.user_data)
         self.assertEqual(second_res.status_code, 409)
 
-    
+    def test_already_registered_useremail(self):
+        """Test that a user cannot be registered twice."""
+        user1_data = {
+            "password": "jkndsjbchjfr",
+            "username": "Black",
+            "email": "abner@gmail.com"
+        }
+
+        res = self.client.post('/auth/register', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        second_res = self.client.post('/auth/register', data=user1_data)
+        self.assertEqual(second_res.status_code, 409)
 
     def tearDown(self):
         db.drop_all()
         self.app_context.pop()
+
 
 if __name__ == "__main__":
     unittest.main()
