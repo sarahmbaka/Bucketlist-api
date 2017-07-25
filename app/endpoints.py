@@ -10,3 +10,4 @@ api_blueprint = Blueprint('api', __name__)
 api = Api(api_blueprint)
 
 api.add_resource(AuthRegister, '/auth/register')
+api.add_resource(AuthLogin, '/auth/login')
