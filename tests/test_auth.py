@@ -75,9 +75,16 @@ class TestAuthRegister(unittest.TestCase):
         res = self.client.post('/auth/register', data=user1_data)
         self.assertEqual(res.status_code, 400)
 
-
-
-
+    def test_email_format(self):
+        """Test that a email is in the right format."""
+        user1_data = {
+            "password": "jkn735473573d",
+            "username": "Sarah",
+            "email": "abner@gmail"
+        }
+        res = self.client.post('/auth/register', data=user1_data)
+        self.assertEqual(res.status_code, 400)
+    
 
     def tearDown(self):
         db.drop_all()
