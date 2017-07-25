@@ -9,6 +9,17 @@ from app.models import User, Bucketlist, Item
 from app import db
 
 
+def validate_token(self):
+    # get the auth token
+    self.reqparse = reqparse.RequestParser()
+    self.reqparse.add_argument('Authorization', type=str, location="headers")
+    args = self.reqparse.parse_args()
+    token = args["Authorization"]
+    if token:
+        user_id = User.decode_auth_token(token)
+        return user_id
+    print(token)
+
 class AuthRegister(Resource):
     """User registration."""
 
