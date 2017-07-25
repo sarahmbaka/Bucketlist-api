@@ -84,7 +84,12 @@ class TestAuthRegister(unittest.TestCase):
         }
         res = self.client.post('/auth/register', data=user1_data)
         self.assertEqual(res.status_code, 400)
-    
+    def test_encode_auth_token(self):
+        res = self.client.post('/auth/register', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        res1 = self.client.post('/auth/login', data=self.user_data)
+        self.assertEqual(res1.status_code, 200)
+
 
     def tearDown(self):
         db.drop_all()
