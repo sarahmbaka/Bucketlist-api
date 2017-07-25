@@ -69,4 +69,46 @@ class AuthRegister(Resource):
         new_user.save()
         return {'message': 'User Registration success!'}, 201
 
-    
+
+
+class AuthLogin(Resource):
+    """Log in resource."""
+
+    def __init__(self):
+        """Initialize log in resource."""
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('username', type=str,
+                                   help='Username required', required=True)
+        self.reqparse.add_argument('password', type=str,
+                                   help='Password required', required=True)
+
+    def post(self):
+        """Authenticate user."""
+        args = self.reqparse.parse_args()
+        try:
+            auth_user = User.query.filter_by(username=args['username']).first()
+
+            if not auth_user:
+                response = {'status': 'fail',
+                            'message': 'Invalid username/password!'
+                            }
+                return (response), 401
+            auth_token = auth_user.encode_auth_token(auth_user.id)
+            print("auth token", auth_token)
+            if not auth_token:
+                response = {'status': 'fail',
+                            'message': 'Login failed! Please try again'
+                            }
+                return (response), 401
+
+            response = {'status': 'success',
+                        'message': 'You have successfully logged in.',
+                        'auth_token': auth_token
+                        }
+
+            return (response), 200
+        except Exception as e:
+            response = {'status': str(e),
+                        'message': 'Login failed! Please try again'
+                        }
+            return (response), 500
