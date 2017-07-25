@@ -65,6 +65,18 @@ class TestAuthRegister(unittest.TestCase):
         res = self.client.post('/auth/register', data=user1_data)
         self.assertEqual(res.status_code, 400)
 
+    def test_username_empty(self):
+        """Test that a username cannot be empty."""
+        user1_data = {
+            "password": "jkn735473573d",
+            "username": "",
+            "email": "abner@gmail.com"
+        }
+        res = self.client.post('/auth/register', data=user1_data)
+        self.assertEqual(res.status_code, 400)
+
+
+
 
 
     def tearDown(self):
