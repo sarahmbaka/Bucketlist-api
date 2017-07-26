@@ -8,7 +8,6 @@ from flask import jsonify, make_response, request
 from app.models import User, Bucketlist, Item
 from app import db
 
-
 def validate_token(self):
     # get the auth token
     self.reqparse = reqparse.RequestParser()
@@ -19,7 +18,6 @@ def validate_token(self):
         user_id = User.decode_auth_token(token)
         return user_id
     print(token)
-
 class AuthRegister(Resource):
     """User registration."""
 
@@ -81,7 +79,6 @@ class AuthRegister(Resource):
         return {'message': 'User Registration success!'}, 201
 
 
-
 class AuthLogin(Resource):
     """Log in resource."""
 
@@ -123,3 +120,51 @@ class AuthLogin(Resource):
                         'message': 'Login failed! Please try again'
                         }
             return (response), 500
+
+
+class BucketlistView(Resource):
+    """Bucket list CRUD functionality."""
+
+    def __init__(self):
+        """Initialize bucketlist Resource."""
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('Authorization', type=str, location="headers")
+        self.reqparse.add_argument('name', type=str, location="json")
+        self.reqparse.add_argument('description', type=str, location="json")
+
+
+    def post(self):
+        """Add new bucketlist."""
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        if len(args['name']) == 0:
+            response = {
+                        'message': 'Please enter a Bucketlist name!',
+                        'status': 'fail'
+                        }
+            return response, 400
+
+        if Bucketlist.query.filter_by(name=args['name'], created_by=user_id).first():
+                    # if bucketlist with given name exists
+            response = {
+                        'message': 'This Bucketlist already exists !',
+                        'status': 'fail'
+                        }
+            return response, 409
+        bucketlist = Bucketlist(name=args['name'],
+                                description=args['description'],
+                                created_by=user_id)
+        bucketlist.save()
+        response = {
+                    'message': 'Bucketlist {} Added!'.format(args['name']),
+                    'status': 'success'
+                    }
+        return response, 201
