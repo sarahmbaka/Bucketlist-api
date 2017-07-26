@@ -48,3 +48,30 @@ class User(db.Model):
             return 'Token expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+
+class Bucketlist(db.Model):
+    """Bucket lists table."""
+
+    __tablename__ = 'bucketlist'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+    description = db.Column(db.String(50))
+    created_on = db.Column(db.DateTime, default=datetime.now)
+    modified_on = db.Column(db.DateTime, default=datetime.now)
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    deleted = db.Column(db.Boolean, default=False)
+    items = db.relationship('Item', backref='bucketlist',
+                            cascade='all, delete',
+                            lazy='dynamic')
+
+    def save(self):
+        """Save a bucketlist."""
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """Delete a bucketlist."""
+        db.session.delete(self)
+        db.session.commit()
