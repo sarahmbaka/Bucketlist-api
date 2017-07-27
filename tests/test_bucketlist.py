@@ -287,7 +287,19 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Bucketlist deleted.!!",
                          res_message['message'])
 
+    def test_delete_non_existent_bucketlist(self):
+        """Test that a user can update bucketlist."""
+        res_bucketlist = self.client.delete('/bucketlist/1',
+                                          headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 404)
+        self.assertEqual("Bucketlist does not exist.!!",
+                         res_message['message'])
+
     
+
 
     def tearDown(self):
         db.drop_all()
