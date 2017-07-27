@@ -202,6 +202,20 @@ class TestBucketlistItems(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 201)
 
+    def test_update_non_existent_bucketlist_item(self):
+        """Test that a user can  add."""
+        bucketlistitem = {
+            "name" : "BlackN",
+            "description" : "Black don't crack"
+        }
+        res_bucketlistitem = self.client.put('/bucketlist/1/items/3', data=json.dumps(bucketlistitem)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual("Item does not exist!",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 404)
+
     
 
     def tearDown(self):
