@@ -67,6 +67,24 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlist.status_code, 201)
 
+    def test_add_already_existing_bucketlist(self):
+        """Test that a user can  add."""
+
+
+
+        res_bucketlist = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist1.data.decode('utf8'))
+        self.assertEqual("This Bucketlist already exists !",
+                         res_message['message'])
+        self.assertEqual(res_bucketlist1.status_code, 409)
+
     
     def tearDown(self):
         db.drop_all()
