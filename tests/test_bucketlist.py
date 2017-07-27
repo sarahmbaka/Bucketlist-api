@@ -85,7 +85,24 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlist1.status_code, 409)
 
+    def test_add_bucketlist_with_empty_name(self):
+        """Test that a user can  add."""
+        bucketlist = {
+            "name" : "",
+            "description" : "Black don't crack"
+        }
+        res_bucketlist = self.client.post('/bucketlist/', data=json.dumps(bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual("Please enter a Bucketlist name!",
+                         res_message['message'])
+        self.assertEqual(res_bucketlist.status_code, 400)
+
     
+
+
     def tearDown(self):
         db.drop_all()
         self.app_context.pop()
