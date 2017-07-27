@@ -288,7 +288,15 @@ class TestBucketlistItems(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 401)
 
-    
+    def test_delete_bucketlist_item_unauthorized_token(self):
+        """Test that a user can  add."""
+        res_bucketlistitem = self.client.delete('/bucketlist/1/items/4', data=json.dumps(self.bucketlistitem)
+                                          ,headers=self.headers2
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual(" Item not found ",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 404)
 
     def tearDown(self):
         db.drop_all()
