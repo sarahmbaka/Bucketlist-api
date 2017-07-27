@@ -196,8 +196,22 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Bucketlist Blackd Updated!",
                          res_message['message'])
 
-    
+    def test_update_non_existent_bucketlist(self):
+        """Test that a user can update bucketlist."""
+        data = {
+        "name": "Blackd",
+        "description": "hey hey hey"
+        }
+        res_bucketlist = self.client.put('/bucketlist/4',data= json.dumps(data),
+                                          headers=self.headers
+                                          ,content_type="application/json")
 
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 404)
+        self.assertEqual("Bucketlist does not exist!!",
+                         res_message['message'])
+
+    
 
     def tearDown(self):
         db.drop_all()
