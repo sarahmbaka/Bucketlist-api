@@ -268,6 +268,26 @@ class TestBucketlistItems(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 200)
 
+    def test_delete_non_existent_bucketlist_item(self):
+        """Test that a user can  add."""
+        res_bucketlistitem = self.client.delete('/bucketlist/1/items/4', data=json.dumps(self.bucketlistitem)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual(" Item not found ",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 404)
+
+    def test_delete_bucketlist_item_invalid_token(self):
+        """Test that a user can  add."""
+        res_bucketlistitem = self.client.delete('/bucketlist/1/items/4', data=json.dumps(self.bucketlistitem)
+                                          ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual("Invalid token. Please log in again.",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 401)
+
     
 
     def tearDown(self):
