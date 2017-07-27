@@ -141,7 +141,19 @@ class TestBucketlist(unittest.TestCase):
 
         self.assertEqual(res_bucketlist.status_code, 200)
 
+    def test_get_bucketlist_with_invalid_token(self):
+        """Test that a user can  add."""
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.get('/bucketlist/1',headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                          ,content_type="application/json")
+
+
+        self.assertEqual(res_bucketlist.status_code, 401)
+
     
+
     def tearDown(self):
         db.drop_all()
         self.app_context.pop()
