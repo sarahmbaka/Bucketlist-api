@@ -188,6 +188,20 @@ class TestBucketlistItems(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
 
+    def test_update_bucketlist_item(self):
+        """Test that a user can  add."""
+        bucketlistitem = {
+            "name" : "BlackN",
+            "description" : "Black don't crack"
+        }
+        res_bucketlistitem = self.client.put('/bucketlist/1/items/1', data=json.dumps(bucketlistitem)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual("Bucketlist Item updated",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 201)
+
     
 
     def tearDown(self):
