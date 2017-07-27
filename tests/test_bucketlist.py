@@ -211,6 +211,24 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Bucketlist does not exist!!",
                          res_message['message'])
 
+    def test_update_empty_bucketlist_name(self):
+        """Test that a user can not update bucketlist with empty name."""
+        data = {
+        "name": "",
+        "description": "hey hey hey"
+        }
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.put('/bucketlist/1',data= json.dumps(data),
+                                          headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 400)
+        self.assertEqual("Cannot update to empty bucketlist name.!!",
+                         res_message['message'])
+
     
 
     def tearDown(self):
