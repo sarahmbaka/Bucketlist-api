@@ -340,7 +340,20 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual(res_bucketlist.status_code, 200)
         self.assertTrue(len(json.loads(res_bucketlist.data)) == 0)
 
-    
+    def test_search_existent_bucket(self):
+        """Test that a user can  add."""
+        bucketlist = {
+            "name" : "BlackD",
+            "description" : "Black don't crack"
+        }
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.get('/bucketlist/?q=black',headers=self.headers
+                                          ,content_type="application/json")
+
+        self.assertEqual(res_bucketlist.status_code, 200)
+        self.assertTrue(len(json.loads(res_bucketlist.data)) > 0)
 
 
     def tearDown(self):
