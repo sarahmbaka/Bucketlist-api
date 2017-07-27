@@ -159,8 +159,15 @@ class TestBucketlistItems(unittest.TestCase):
 
         self.assertEqual(res_bucketlistitems.status_code, 401)
 
-    
+    def test_get_bucketlist_item_unauthorized_token(self):
+        """Test that a user get all items."""
+        res_bucketlistitems = self.client.get('/bucketlist/1/items/'
+                                              ,headers=self.headers2
+                                              ,content_type="application/json")
 
+        self.assertEqual(res_bucketlistitems.status_code, 404)
+
+    
     def tearDown(self):
         db.drop_all()
         self.app_context.pop()
