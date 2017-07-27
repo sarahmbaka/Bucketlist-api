@@ -35,6 +35,7 @@ class TestAuthRegister(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
 
 
+
     def test_already_registered_username(self):
         """Test that a user cannot be registered twice."""
         res = self.client.post('/auth/register', data=self.user_data)
@@ -55,7 +56,7 @@ class TestAuthRegister(unittest.TestCase):
         second_res = self.client.post('/auth/register', data=user1_data)
         self.assertEqual(second_res.status_code, 409)
 
-    def test_password_short(self):
+    def test_already_password_short(self):
         """Test that a user cannot be registered twice."""
         user1_data = {
             "password": "jknd",
@@ -89,11 +90,10 @@ class TestAuthRegister(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         res1 = self.client.post('/auth/login', data=self.user_data)
         self.assertEqual(res1.status_code, 200)
-
-
-    def tearDown(self):
-        db.drop_all()
-        self.app_context.pop()
+        
+def tearDown(self):
+    db.drop_all()
+    self.app_context.pop()
 
 
 if __name__ == "__main__":
