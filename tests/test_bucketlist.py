@@ -100,8 +100,19 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlist.status_code, 400)
 
-    
+    def test_add_bucketlist_with_invalid_token(self):
+        """Test that a user can  add."""
 
+        res_bucketlist = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual("Invalid token. Please log in again.",
+                         res_message['message'])
+        self.assertEqual(res_bucketlist.status_code, 401)
+
+    
 
     def tearDown(self):
         db.drop_all()
