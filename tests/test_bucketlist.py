@@ -112,6 +112,24 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlist.status_code, 401)
 
+    def test_get_all_bucket(self):
+        """Test that a user can  add."""
+        bucketlist = {
+            "name" : "BlackD",
+            "description" : "Black don't crack"
+        }
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist2 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.get('/bucketlist/',headers=self.headers
+                                          ,content_type="application/json")
+
+        self.assertEqual(res_bucketlist.status_code, 200)
+        self.assertTrue(len(json.loads(res_bucketlist.data)) > 1)
+
     
 
     def tearDown(self):
