@@ -178,7 +178,26 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Bucketlist cannot be found",
                          res_message['message'])
 
+    def test_update_bucketlist(self):
+        """Test that a user can update bucketlist."""
+        data = {
+        "name": "Blackd",
+        "description": "hey hey hey"
+        }
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.put('/bucketlist/1',data= json.dumps(data),
+                                          headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 200)
+        self.assertEqual("Bucketlist Blackd Updated!",
+                         res_message['message'])
+
     
+
 
     def tearDown(self):
         db.drop_all()
