@@ -165,8 +165,20 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
 
 
-    
+    def test_get_none_existent_bucketlist_id(self):
+        """Test that a user can  add."""
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.get('/bucketlist/2',headers=self.headers
+                                          ,content_type="application/json")
 
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 404)
+        self.assertEqual("Bucketlist cannot be found",
+                         res_message['message'])
+
+    
 
     def tearDown(self):
         db.drop_all()
