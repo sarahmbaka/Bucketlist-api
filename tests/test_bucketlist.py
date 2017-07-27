@@ -312,6 +312,19 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Bucketlist does not exist.!!",
                          res_message['message'])
 
+    def test_delete_bucketlist_with_invalid_token(self):
+        """Test that a user can update bucketlist."""
+        res_bucketlist1 = self.client.post('/bucketlist/',data= json.dumps(self.bucketlist),
+                                          headers=self.headers
+                                          ,content_type="application/json")
+        res_bucketlist = self.client.delete('/bucketlist/1',
+                                          headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 401)
+        self.assertEqual("Invalid token. Please log in again.",
+                         res_message['message'])
     
 
 
