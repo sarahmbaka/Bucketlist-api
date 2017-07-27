@@ -151,6 +151,14 @@ class TestBucketlistItems(unittest.TestCase):
         self.assertEqual(res_bucketlistitems.status_code, 200)
         self.assertTrue(len(json.loads(res_bucketlistitems.data)) > 0)
 
+    def test_get_bucketlist_item_invalid_token(self):
+        """Test that a user get all items."""
+        res_bucketlistitems = self.client.get('/bucketlist/1/items/1'
+                                              ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                              ,content_type="application/json")
+
+        self.assertEqual(res_bucketlistitems.status_code, 401)
+
     
 
     def tearDown(self):
