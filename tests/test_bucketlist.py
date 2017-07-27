@@ -229,7 +229,21 @@ class TestBucketlist(unittest.TestCase):
         self.assertEqual("Cannot update to empty bucketlist name.!!",
                          res_message['message'])
 
+    def test_update_bucketlist_with_same_name(self):
+        """Test that a user can not update bucketlist with same name."""
+        res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        self.assertEqual(res_bucketlist1.status_code, 201)
+        res_bucketlist = self.client.put('/bucketlist/1',data= json.dumps(self.bucketlist),
+                                          headers=self.headers
+                                          ,content_type="application/json")
+
+        res_message = json.loads(res_bucketlist.data.decode('utf8'))
+        self.assertEqual(res_bucketlist.status_code, 200)
+
     
+
 
     def tearDown(self):
         db.drop_all()
