@@ -230,6 +230,20 @@ class TestBucketlistItems(unittest.TestCase):
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
 
+    def test_update_bucketlist_item_invalid_token(self):
+        """Test that a user can  add."""
+        bucketlistitem = {
+            "name" : "SouthC",
+            "description" : "Black don't crack"
+        }
+        res_bucketlistitem = self.client.put('/bucketlist/1/items/1', data=json.dumps(bucketlistitem)
+                                          ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual("Invalid token. Please log in again.",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 401)
+
     
 
     def tearDown(self):
