@@ -174,6 +174,20 @@ class TestBucketlistItems(unittest.TestCase):
 
         self.assertEqual(res_bucketlistitems.status_code, 404)
 
+    def test_update_bucketlist_item_empty_name(self):
+        """Test that a user can  add."""
+        bucketlistitem = {
+            "name" : "",
+            "description" : "Black don't crack"
+        }
+        res_bucketlistitem = self.client.put('/bucketlist/1/items/1', data=json.dumps(bucketlistitem)
+                                          ,headers=self.headers
+                                          ,content_type="application/json")
+        res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
+        self.assertEqual("Name cannot be empty!",
+                         res_message['message'])
+        self.assertEqual(res_bucketlistitem.status_code, 409)
+
     
 
     def tearDown(self):
