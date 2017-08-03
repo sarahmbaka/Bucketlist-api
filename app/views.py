@@ -315,3 +315,59 @@ class BucketlistView(Resource):
                         'status': 'fail'
                         }
             return response, 404
+
+class ItemView(Resource):
+    def __init__(self):
+        """Initialize bucketlist Resource."""
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('name', type=str)
+        self.reqparse.add_argument('description', type=str)
+
+    def post(self, id=None):
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        if not args['name']:
+            response = {
+                        'message': 'Please provide a name!!',
+                        'status': 'fail'
+                        }
+            return response, 400
+        bucketlist = Bucketlist.query.filter_by(id=id).first()
+        if not bucketlist:
+            response = {
+                        'message': 'Bucketlist does not exist.!!',
+                        'status': 'fail'
+                        }
+            return response, 404
+
+        duplicate_item = Item.query.filter_by(name=
+                                              args['name'],
+                                              bucketlist_id=
+                                              id).first()
+        if duplicate_item:
+            response = {
+                        'message': 'Bucketlist Item already exists!!',
+                        'status': 'fail'
+                        }
+            return response, 409
+
+
+
+        bucketlist_id = bucketlist.id
+        item = Item(name=args['name'],
+                    description=args['description'],
+                    bucketlist_id=bucketlist_id)
+        item.save()
+        response = {
+                    'status': 'success',
+                    'message': 'Item {} has been added'
+                    .format(args['name'])
+                    }
+        return response, 201
