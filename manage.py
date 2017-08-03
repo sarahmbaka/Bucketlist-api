@@ -7,7 +7,9 @@ from flask_migrate import Migrate, MigrateCommand
 from app import db, create_app
 from app.models import User, Bucketlist, Item
 
-app = create_app(config_name='development')
+config = os.getenv("ENV")
+
+app = create_app(config_name=config)
 migrate = Migrate(app, db)
 manager = Manager(app)
 
