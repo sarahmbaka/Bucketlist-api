@@ -472,6 +472,7 @@ class ItemView(Resource):
                     'message': 'Bucketlist Item updated'
                     }
         return response, 201
+        
     def delete(self, id, item_id):
         user_id = validate_token(self)
         if not isinstance(user_id, int):
