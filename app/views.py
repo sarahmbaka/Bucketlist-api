@@ -290,3 +290,28 @@ class BucketlistView(Resource):
                         'status': 'fail'
                         }
             return response, 400
+
+
+    def delete(self, id=None):
+        """Delete bucketlist."""
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        deletebucket = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+        if deletebucket:
+                deletebucket.delete()
+                response = {
+                            'message': 'Bucketlist deleted.!!',
+                            'status': 'success'
+                            }
+                return response, 200
+        else:
+            response = {
+                        'message': 'Bucketlist does not exist.!!',
+                        'status': 'fail'
+                        }
+            return response, 404
