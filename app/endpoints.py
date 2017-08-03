@@ -11,3 +11,4 @@ api = Api(api_blueprint)
 
 api.add_resource(AuthRegister, '/auth/register')
 api.add_resource(AuthLogin, '/auth/login')
+api.add_resource(BucketlistView, '/bucketlist/', '/bucketlist/<int:id>')
