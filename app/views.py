@@ -17,7 +17,7 @@ def validate_token(self):
     if token:
         user_id = User.decode_auth_token(token)
         return user_id
-    print(token)
+
 class AuthRegister(Resource):
     """User registration."""
 
@@ -249,3 +249,44 @@ class BucketlistView(Resource):
                         }
                 bucketlists_data.append(bucketlists)
             return (bucketlists_data), 200
+
+    def put(self, id=None):
+        """Update bucketlist."""
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        updatebucket = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+        if not updatebucket:
+            response = {
+                        'message': 'Bucketlist does not exist!!',
+                        'status': 'success'
+                        }
+            return response, 404
+        if args["name"]:
+            if Bucketlist.query.filter_by(
+                    name=args.get('name').lower()).first():
+                    return ({"error": "Cannot update bucket with same name."},
+                            409)
+            else:
+                    updatebucket.name = args.get("name")
+                    updatebucket.description = args["description"]
+                    updatebucket.save()
+
+                    response = {
+                                'message': 'Bucketlist {} Updated!'.format(args.get('name')),
+                                'status': 'success'
+                                }
+                    return response, 200
+
+        else:
+            response = {
+                        'message': 'Cannot update to empty bucketlist name.!!',
+                        'status': 'fail'
+                        }
+            return response, 400
