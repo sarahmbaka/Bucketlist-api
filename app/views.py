@@ -472,4 +472,27 @@ class ItemView(Resource):
                     'message': 'Bucketlist Item updated'
                     }
         return response, 201
-    
+    def delete(self, id, item_id):
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        args = self.reqparse.parse_args()
+        item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+        if not item:
+            response = {
+                        'status': 'fail',
+                        'message': ' Item not found '
+                        }
+            return response, 404
+
+        item.delete()
+
+        response = {
+                    'status': 'success',
+                    'message': 'Item succesfully deleted'
+                    }
+        return response, 200
