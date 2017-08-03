@@ -102,7 +102,7 @@ class AuthLogin(Resource):
                             }
                 return (response), 401
             auth_token = auth_user.encode_auth_token(auth_user.id)
-            print("auth token", auth_token)
+
             if not auth_token:
                 response = {'status': 'fail',
                             'message': 'Login failed! Please try again'
@@ -145,7 +145,7 @@ class BucketlistView(Resource):
                         }
             return (response), 401
 
-        if len(args['name']) == 0:
+        if not args['name']:
             response = {
                         'message': 'Please enter a Bucketlist name!',
                         'status': 'fail'
@@ -168,3 +168,84 @@ class BucketlistView(Resource):
                     'status': 'success'
                     }
         return response, 201
+
+    def get(self, id=None):
+        """View bucketlists."""
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        self.reqparse.add_argument('limit', type=int, help='invalid limit',
+            required=False, default=20, location='args')
+        self.reqparse.add_argument('q', type=str, help='Invalid Query',
+            required=False, location='args')
+        self.reqparse.add_argument('page', type=int, required=False, default=1, location='args')
+        args = self.reqparse.parse_args()
+        bucketlists_data = []
+        if id:
+            # retrieve a bucketlist
+            bucketlist = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+            if not bucketlist:
+                    response = {
+                                'status': 'fail',
+                                'message': 'Bucketlist cannot be found'
+                                }
+                    return (response), 404
+
+            if not bucketlist.items:
+                    items = {}
+            else:
+                item_data = []
+            for item in bucketlist.items:
+                items = {
+                        "item_id": item.id,
+                        "item_name": item.name,
+                        "item_description": item.description
+                        }
+                item_data.append(items)
+            response = {
+                            'id': bucketlist.id,
+                            'title': bucketlist.name,
+                            'description': bucketlist.description,
+                            'created_on': str(bucketlist.created_on),
+                            'items': item_data
+                }
+            return (response), 200
+        if args['q']:
+
+            bucketlist = Bucketlist.query \
+                          .filter_by(created_by=user_id) \
+                          .filter(Bucketlist.name
+                                  .ilike('%' + args['q'] + '%')).paginate(page=args['page'],
+                                                                         per_page=args['limit'],
+                                                                         error_out=False)
+
+
+            for bucket in bucketlist.items:
+                bucketlists = {
+                        'id': bucket.id,
+                        'title': bucket.name,
+                        'description': bucket.description,
+                        'created_on': str(bucket.created_on),
+                        }
+                bucketlists_data.append(bucketlists)
+            return (bucketlists_data), 200
+
+        else:
+            bucketlist = (Bucketlist.query.filter_by(created_by=user_id).paginate(page=args['page'],
+                                                   per_page=args['limit'],
+                                                   error_out=False))
+
+            for bucket in bucketlist.items:
+                bucketlists = {
+                        'id': bucket.id,
+                        'title': bucket.name,
+                        'description': bucket.description,
+                        'created_on': str(bucket.created_on),
+                        }
+                bucketlists_data.append(bucketlists)
+            return (bucketlists_data), 200
