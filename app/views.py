@@ -421,4 +421,55 @@ class ItemView(Resource):
 
         return (response), 200
 
+    def put(self, id, item_id):
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        if id:
+            # retrieve a bucketlist
+            bucketlist = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+            if not bucketlist:
+                    response = {
+                                'status': 'fail',
+                                'message': 'Bucketlist cannot be found'
+                                }
+                    return (response), 404
+        item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+        if not item:
+            response = {
+                        'status': 'fail',
+                        'message': 'Item does not exist!'
+                        }
+            return response, 404
+        if not args["name"]:
+            response = {
+                       'status': 'fail',
+                       'message': 'Name cannot be empty!'
+                       }
+            return response, 409
+        if item.name == args['name'] and \
+            item.description == args['description']:
+
+            response = {
+                       'status': 'fail',
+                       'message': 'Nothing to be updated!'
+                       }
+            return response, 409
+
+        item.name = args['name']
+        item.description = args['description']
+
+        item.save()
+
+        response = {
+                    'status': 'success',
+                    'message': 'Bucketlist Item updated'
+                    }
+        return response, 201
     
