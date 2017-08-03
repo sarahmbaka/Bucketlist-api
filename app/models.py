@@ -51,6 +51,9 @@ class User(db.Model):
 
 
 
+
+
+
 class Bucketlist(db.Model):
     """Bucket lists table."""
 
@@ -73,5 +76,28 @@ class Bucketlist(db.Model):
 
     def delete(self):
         """Delete a bucketlist."""
+        db.session.delete(self)
+        db.session.commit()
+
+
+class Item(db.Model):
+    """Item table."""
+
+    __tablename__ = 'item'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+    description = db.Column(db.String(50))
+    created_on = db.Column(db.DateTime, default=datetime.now)
+    modified_on = db.Column(db.DateTime, default=datetime.now)
+    deleted = db.Column(db.Boolean, default=False)
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlist.id'))
+
+    def save(self):
+        """Save a Item."""
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """Delete a Item."""
         db.session.delete(self)
         db.session.commit()

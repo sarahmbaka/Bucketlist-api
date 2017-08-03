@@ -315,3 +315,184 @@ class BucketlistView(Resource):
                         'status': 'fail'
                         }
             return response, 404
+
+class ItemView(Resource):
+    def __init__(self):
+        """Initialize bucketlist Resource."""
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('name', type=str)
+        self.reqparse.add_argument('description', type=str)
+
+    def post(self, id=None):
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        if not args['name']:
+            response = {
+                        'message': 'Please provide a name!!',
+                        'status': 'fail'
+                        }
+            return response, 400
+        bucketlist = Bucketlist.query.filter_by(id=id).first()
+        if not bucketlist:
+            response = {
+                        'message': 'Bucketlist does not exist.!!',
+                        'status': 'fail'
+                        }
+            return response, 404
+
+        duplicate_item = Item.query.filter_by(name=
+                                              args['name'],
+                                              bucketlist_id=
+                                              id).first()
+        if duplicate_item:
+            response = {
+                        'message': 'Bucketlist Item already exists!!',
+                        'status': 'fail'
+                        }
+            return response, 409
+
+
+
+        bucketlist_id = bucketlist.id
+        item = Item(name=args['name'],
+                    description=args['description'],
+                    bucketlist_id=bucketlist_id)
+        item.save()
+        response = {
+                    'status': 'success',
+                    'message': 'Item {} has been added'
+                    .format(args['name'])
+                    }
+        return response, 201
+
+    def get(self, id, item_id=None):
+        """View bucketlists."""
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        if id:
+            # retrieve a bucketlist
+            bucketlist = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+            if not bucketlist:
+                    response = {
+                                'status': 'fail',
+                                'message': 'Bucketlist cannot be found'
+                                }
+                    return (response), 404
+            if item_id:
+                item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+
+                if not item:
+                        response = {
+                                    'status': 'fail',
+                                    'message': 'Item cannot be found'
+                                    }
+                        return (response), 404
+                else:
+
+                    response = {
+                            "item_id": item.id,
+                            "item_name": item.name,
+                            "item_description": item.description
+                            }
+            else:
+                bucketlistitems = (Item.query.filter_by(bucketlist_id=id))
+                items = []
+                for item in bucketlistitems:
+                    item = {
+                            'id': item.id,
+                            'title': item.name,
+                            'description': item.description,
+                            'created_on': str(item.created_on),
+                            }
+                    items.append(item)
+                return (items), 200
+
+        return (response), 200
+
+    def put(self, id, item_id):
+        args = self.reqparse.parse_args()
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+
+        if id:
+            # retrieve a bucketlist
+            bucketlist = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+            if not bucketlist:
+                    response = {
+                                'status': 'fail',
+                                'message': 'Bucketlist cannot be found'
+                                }
+                    return (response), 404
+        item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+        if not item:
+            response = {
+                        'status': 'fail',
+                        'message': 'Item does not exist!'
+                        }
+            return response, 404
+        if not args["name"]:
+            response = {
+                       'status': 'fail',
+                       'message': 'Name cannot be empty!'
+                       }
+            return response, 409
+        if item.name == args['name'] and \
+            item.description == args['description']:
+
+            response = {
+                       'status': 'fail',
+                       'message': 'Nothing to be updated!'
+                       }
+            return response, 409
+
+        item.name = args['name']
+        item.description = args['description']
+
+        item.save()
+
+        response = {
+                    'status': 'success',
+                    'message': 'Bucketlist Item updated'
+                    }
+        return response, 201
+    def delete(self, id, item_id):
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        args = self.reqparse.parse_args()
+        item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+        if not item:
+            response = {
+                        'status': 'fail',
+                        'message': ' Item not found '
+                        }
+            return response, 404
+
+        item.delete()
+
+        response = {
+                    'status': 'success',
+                    'message': 'Item succesfully deleted'
+                    }
+        return response, 200
