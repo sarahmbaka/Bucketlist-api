@@ -371,3 +371,54 @@ class ItemView(Resource):
                     .format(args['name'])
                     }
         return response, 201
+
+    def get(self, id, item_id=None):
+        """View bucketlists."""
+        user_id = validate_token(self)
+        if not isinstance(user_id, int):
+            response = {
+                        'status': 'fail',
+                        'message': user_id
+                        }
+            return (response), 401
+        if id:
+            # retrieve a bucketlist
+            bucketlist = Bucketlist.query.filter_by(id=id, created_by=user_id).first()
+            if not bucketlist:
+                    response = {
+                                'status': 'fail',
+                                'message': 'Bucketlist cannot be found'
+                                }
+                    return (response), 404
+            if item_id:
+                item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
+
+                if not item:
+                        response = {
+                                    'status': 'fail',
+                                    'message': 'Item cannot be found'
+                                    }
+                        return (response), 404
+                else:
+
+                    response = {
+                            "item_id": item.id,
+                            "item_name": item.name,
+                            "item_description": item.description
+                            }
+            else:
+                bucketlistitems = (Item.query.filter_by(bucketlist_id=id))
+                items = []
+                for item in bucketlistitems:
+                    item = {
+                            'id': item.id,
+                            'title': item.name,
+                            'description': item.description,
+                            'created_on': str(item.created_on),
+                            }
+                    items.append(item)
+                return (items), 200
+
+        return (response), 200
+
+    
