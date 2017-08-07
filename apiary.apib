@@ -21,9 +21,9 @@ Username must be Unique.
 
         {
             "username": "Mbaka",
-            "email" : "sarah@gmail.com"
+            "email" : "sarah@gmail.com",
             "password": "123456789"
-            ]
+            
         }
 
 + Response 201 (application/json)
@@ -37,3 +37,34 @@ Username must be Unique.
         {
             "message": "User Registration success!"
         }
+        
+## Login [/auth/login]
+
+### Authenitcate and Authorize a user [POST]
+
+Use your correct email and password.
+Note the token returned on successful login. It is required to access other
+resources.
+
++ Request (application/json)
+
+        {
+            "username": "Mbaka",
+            "password": "123456789"
+            
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+        {
+                "status": "success",
+                "message": "You have successfully logged in.",
+                "auth_token": "Your_Token_Here"
+        }
+
