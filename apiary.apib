@@ -4,7 +4,7 @@ HOST: https://buckapi.herokuapp.com
 # Bucketlist
 Bucketlist app is an application that allows users to record and share things they want to achieve or experience before reaching a certain age meeting the needs of keeping track of their dreams and goals.
 
-## Group Authentication 
+## Group Authentication
 
 ## Registration [/auth/register]
 
@@ -68,3 +68,33 @@ resources.
                 "auth_token": "Your_Token_Here"
         }
 
+## Group Bucketlist
+
+## Bucketlist endpoints[/bucketlist/]
+
+### Create a new bucketlist  [POST]
+
+It takes a JSON object containing a name and description.
+
+Bucketlist name must be Unique.
+
+
++ Request (application/json)
+
+        {
+          "name": "SouthAfrica",
+          "description": "sarah@gmsil.com"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+    {
+        "message": "Bucketlist SouthAfrica Added!",
+        "status": "success"
+    }
