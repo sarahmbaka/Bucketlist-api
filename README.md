@@ -1,6 +1,6 @@
 # bucketlist-api
 
-[![Build Status](https://travis-ci.org/sarahmbaka/bucketlist-api.svg?branch=develop)](https://travis-ci.org/sarahmbaka/bucketlist-api)  ||  [![Coverage Status](https://coveralls.io/repos/github/sarahmbaka/bucketlist-api/badge.svg?branch=develop)](https://coveralls.io/github/sarahmbaka/bucketlist-api?branch=develop)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3ae3f9985c1e43eaae3b7206de7f5d9f)](https://www.codacy.com/app/sarahmbaka/bucketlist-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sarahmbaka/bucketlist-api&amp;utm_campaign=Badge_Grade) || [![Build Status](https://travis-ci.org/sarahmbaka/bucketlist-api.svg?branch=develop)](https://travis-ci.org/sarahmbaka/bucketlist-api)  ||  [![Coverage Status](https://coveralls.io/repos/github/sarahmbaka/bucketlist-api/badge.svg?branch=develop)](https://coveralls.io/github/sarahmbaka/bucketlist-api?branch=develop)
 
 
 API documentation : http://docs.bucketlists1.apiary.io/
