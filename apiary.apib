@@ -4,7 +4,7 @@ HOST: https://buckapi.herokuapp.com
 # Bucketlist
 Bucketlist app is an application that allows users to record and share things they want to achieve or experience before reaching a certain age meeting the needs of keeping track of their dreams and goals.
 
-## Group Authentication 
+## Group Authentication
 
 ## Registration [/auth/register]
 
@@ -23,7 +23,7 @@ Username must be Unique.
             "username": "Mbaka",
             "email" : "sarah@gmail.com",
             "password": "123456789"
-            
+
         }
 
 + Response 201 (application/json)
@@ -37,7 +37,7 @@ Username must be Unique.
         {
             "message": "User Registration success!"
         }
-        
+
 ## Login [/auth/login]
 
 ### Authenitcate and Authorize a user [POST]
@@ -51,10 +51,10 @@ resources.
         {
             "username": "Mbaka",
             "password": "123456789"
-            
+
         }
 
-+ Response 200 (application/json)
++ Response 200
 
     + Headers
 
@@ -68,3 +68,400 @@ resources.
                 "auth_token": "Your_Token_Here"
         }
 
+### Group Bucketlist
+
+## Bucketlist endpoints [/bucketlist/]
+
+### Create a new bucketlist  [POST]
+
+It takes a JSON object containing a name and description.
+
+Bucketlist name must be Unique.
+
+
++ Request (application/json)
+
+    + Headers
+
+            Content-Type:application/json
+    + body
+        {
+          "name": "SouthAfrica",
+          "description": "sarah@gmsil.com"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Authorization : "Your_token_here"
+
+    + Body
+
+    {
+        "message": "Bucketlist SouthAfrica Added!",
+        "status": "success"
+    }
+
++ Response 409 (application/json)
+
+
+    + Body
+
+        {
+            "message": "This Bucketlist already exists !",
+            "status": "fail"
+        }
+
++ Response 400 (application/json)
+
+
+    + Body
+
+    {
+        "message": "Please enter a Bucketlist name!",
+        "status": "fail"
+    }
+
+
+
+## Retrieve all bucketlists  [GET]
+
+This endpoint returns all bucketlists owned by the authenitcated user
+
+It takes in no arguments except the token.
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
+
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+            
+## Single BucketList Resource [/bucketlist/4]
+
+### Get a single bucketlist [GET]
+
+This endpoint returns details of a bucketlist owned by the authenitcated user
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
+
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+
+
+    + Body
+
+
+    {
+    "status": "fail",
+    "message": "Invalid token. Please log in again."
+    }
+
++ Response 200
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+
+    {
+        "id": 4,
+        "title": "SouthAfrica",
+        "description": "sarah@gmsil.com",
+        "created_on": "2017-08-07 11:24:07.440470",
+        "items": []   
+    }
+
+
+### Update a single bucketlist [PUT]
+
+This endpoint Updates details of a bucketlist owned by the authenitcated user
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
+    + body
+        {
+          "name": "SouthAfrica",
+          "description": "Cape Town"
+        }
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+
+
+    + Body
+
+
+    {
+    "status": "fail",
+    "message": "Invalid token. Please log in again."
+    }
+
++ Response 200
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+
+    {
+        "id": 4,
+        "title": "SouthAfrica",
+        "description": "Cape Town",
+        "created_on": "2017-08-07 11:24:07.440470",
+        "items": []   
+    }
+    
+### Delete a single bucketlist [DELETE]
+
+This endpoint Deletes details of a bucketlist owned by the authenitcated user
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+
+
+    + Body
+
+
+    {
+        "status": "fail",
+        "message": "Invalid token. Please log in again."
+    }
+
++ Response 200
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+    {
+        'message': 'Bucketlist deleted.!!',
+        'status': 'success'
+    }
+
+## BucketList Item Resource [/bucketlist/4/items/]
+
+### Create a Bucketlist Item [POST]
+
+It takes a JSON object containing a name and description.
+
+Bucketlist Item name must be Unique to the bucketlist.
+
+
++ Request (application/json)
+
+    + Headers
+
+            Content-Type:application/json
+    + body
+        {
+          "name": "Travel",
+          "description": "To see Black"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Authorization : "Your_token_here"
+
+    + Body
+
+    {
+        "message": "Bucketlist Item Travel Added!",
+        "status": "success"
+    }
+
++ Response 409 (application/json)
+
+
+    + Body
+
+        {
+            "message": "This Bucketlist Item already exists !",
+            "status": "fail"
+        }
+
++ Response 400 (application/json)
+
+
+    + Body
+
+    {
+        "message": "Please enter Item name!",
+        "status": "fail"
+    }
+### Retrieve a bucketlist Items [GET]
+
+This endpoint Returns  a list  bucketlist owned by the authenitcated user
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+
+
++ Response 200
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+    {
+        "id": <id>,
+        "title": "string here",
+        "description": "string here",
+        "created_on": "2017-08-07 19:54:49.656095"
+    }
+
+
+### Update a Bucketlist Item [PUT]
+
+It takes a JSON object containing a name and description.
+
+Bucketlist Item name must be Unique to the bucketlist.
+
+
++ Request (application/json)
+
+    + Headers
+
+            Content-Type:application/json
+    + body
+        {
+          "name": "Travel the world",
+          "description": "With Black"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Authorization : "Your_token_here"
+
+    + Body
+
+    {
+        "message": "Bucketlist Item Travel Updated!",
+        "status": "success"
+    }
+
++ Response 409 (application/json)
+
+
+    + Body
+
+        {
+            "message": "This Bucketlist Item already exists !",
+            "status": "fail"
+        }
+
++ Response 400 (application/json)
+
+
+    + Body
+
+    {
+        "message": "Please enter Item name!",
+        "status": "fail"
+    }
+    
++ Response 404 (application/json)
+
+    + Body
+        {
+            'message': 'Bucketlist does not exist!!',
+            'status': 'fail'
+        }
+
+### Delete a single bucketlist Item [DELETE]
+
+This endpoint Deletes details of a bucketlist Item owned by the authenitcated user
+
+
++ Request (application/json)
+
+      + Headers
+
+              Authorization : "Your_token_here"
+
++ Response 401
+
+    + Headers
+
+            Content-Type:application/json
+
+
+    + Body
+
+
+    {
+        "status": "fail",
+        "message": "Invalid token. Please log in again."
+    }
+
++ Response 200
+
+    + Headers
+
+            Content-Type:application/json
+
+    + Body
+
+    {
+        'message': 'Bucketlist Item deleted.!!',
+        'status': 'success'
+    }
