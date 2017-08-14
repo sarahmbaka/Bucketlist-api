@@ -207,13 +207,15 @@ class BucketlistView(Resource):
                         "item_description": item.description
                         }
                 item_data.append(items)
-            response = {
-                            'id': bucketlist.id,
-                            'title': bucketlist.name,
-                            'description': bucketlist.description,
-                            'created_on': str(bucketlist.created_on),
-                            'items': item_data
-                }
+            response = { bucketlist :
+                                      {
+                                        'id': bucketlist.id,
+                                        'title': bucketlist.name,
+                                        'description': bucketlist.description,
+                                        'created_on': str(bucketlist.created_on),
+                                        'items': item_data
+                                      }
+                       }
             return (response), 200
         if args['q']:
 
@@ -248,7 +250,10 @@ class BucketlistView(Resource):
                         'created_on': str(bucket.created_on),
                         }
                 bucketlists_data.append(bucketlists)
-            return (bucketlists_data), 200
+            format_bucketlist = {
+                                    "bucketlists": bucketlists_data
+            }
+            return (format_bucketlist), 200
 
     def put(self, id=None):
         """Update bucketlist."""
