@@ -3,6 +3,7 @@
 # third-party imports
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 
 # db variable initialization
 db = SQLAlchemy()
@@ -21,4 +22,5 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     db.init_app(app)
     app.register_blueprint(api_blueprint)
+    CORS(app) 
     return app
