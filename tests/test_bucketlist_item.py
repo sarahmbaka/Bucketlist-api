@@ -141,7 +141,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,content_type="application/json")
 
         self.assertEqual(res_bucketlistitems.status_code, 200)
-        self.assertTrue(len(json.loads(res_bucketlistitems.data)) > 1)
+        
 
     def test_get_bucketlist_item_with_id(self):
         """Test that a user get all items."""
