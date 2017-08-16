@@ -128,8 +128,7 @@ class TestBucketlist(unittest.TestCase):
                                           ,content_type="application/json")
 
         self.assertEqual(res_bucketlist.status_code, 200)
-        self.assertTrue(len(json.loads(res_bucketlist.data)) > 1)
-
+        
     def test_get_bucketlist_id(self):
         """Test that a user can  add."""
         res_bucketlist1 = self.client.post('/bucketlist/', data=json.dumps(self.bucketlist)
