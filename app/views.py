@@ -94,7 +94,7 @@ class AuthLogin(Resource):
         """Authenticate user."""
         args = self.reqparse.parse_args()
         try:
-            auth_user = User.query.filter_by(username=args['username']).first()
+            auth_user = User.query.filter_by(username=args['username'], password=args['password']).first()
 
             if not auth_user:
                 response = {'status': 'fail',
@@ -207,7 +207,7 @@ class BucketlistView(Resource):
                         "item_description": item.description
                         }
                 item_data.append(items)
-            response = { bucketlist :
+            response = { "bucketlist" :
                                       {
                                         'id': bucketlist.id,
                                         'title': bucketlist.name,
@@ -422,7 +422,12 @@ class ItemView(Resource):
                             'created_on': str(item.created_on),
                             }
                     items.append(item)
-                return (items), 200
+
+                format_bucketlistitems = {
+                                        "items": items
+                }
+                return (format_bucketlistitems), 200
+
 
         return (response), 200
 
