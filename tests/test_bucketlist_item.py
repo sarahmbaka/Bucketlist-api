@@ -229,7 +229,6 @@ class TestBucketlistItems(unittest.TestCase):
         self.assertIn("Nothing to be updated!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
-        """check for type"""
     def test_update_bucketlist_item_invalid_token(self):
         """Test that a user can  add."""
         bucketlistitem = {
@@ -267,6 +266,10 @@ class TestBucketlistItems(unittest.TestCase):
         self.assertIn("Item succesfully deleted",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 200)
+
+        res_testbucketlist = self.client.get('/bucketlist/1/items/1',headers=self.headers
+                                          ,content_type="application/json")
+        self.assertEqual(res_testbucketlist.status_code, 404)
 
     def test_delete_non_existent_bucketlist_item(self):
         """Test that a user can  add."""
