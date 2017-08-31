@@ -165,7 +165,7 @@ class TestBucketlistItems(unittest.TestCase):
                                               ,headers=self.headers2
                                               ,content_type="application/json")
 
-        self.assertEqual(res_bucketlistitems.status_code, 404)
+        self.assertEqual(res_bucketlistitems.status_code, 403)
 
     def test_get_non_existent_bucketlist_item(self):
         """Test that a user get all items."""

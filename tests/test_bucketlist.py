@@ -158,8 +158,8 @@ class TestBucketlist(unittest.TestCase):
         res_bucketlist = self.client.get('/bucketlist/1',headers=self.headers2
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlist.data.decode('utf8'))
-        self.assertEqual(res_bucketlist.status_code, 404)
-        self.assertIn("Bucketlist cannot be found",
+        self.assertEqual(res_bucketlist.status_code, 403)
+        self.assertIn("You are not Authorized",
                          res_message['message'])
 
 
@@ -172,8 +172,8 @@ class TestBucketlist(unittest.TestCase):
                                           ,content_type="application/json")
 
         res_message = json.loads(res_bucketlist.data.decode('utf8'))
-        self.assertEqual(res_bucketlist.status_code, 404)
-        self.assertIn("Bucketlist cannot be found",
+        self.assertEqual(res_bucketlist.status_code, 403)
+        self.assertIn("You are not Authorized",
                          res_message['message'])
 
     def test_update_bucketlist(self):
@@ -286,7 +286,7 @@ class TestBucketlist(unittest.TestCase):
                          res_message['message'])
         res_testbucketlist = self.client.get('/bucketlist/1',headers=self.headers
                                           ,content_type="application/json")
-        self.assertEqual(res_testbucketlist.status_code, 404)
+        self.assertEqual(res_testbucketlist.status_code, 403)
 
     def test_delete_non_existent_bucketlist(self):
         """Test that a user can update bucketlist."""

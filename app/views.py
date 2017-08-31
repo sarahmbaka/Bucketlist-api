@@ -192,9 +192,9 @@ class BucketlistView(Resource):
             if not bucketlist:
                     response = {
                                 'status': 'fail',
-                                'message': 'Bucketlist cannot be found'
+                                'message': 'You are not Authorized to retrieve this Item'
                                 }
-                    return (response), 404
+                    return (response), 403
 
             if not bucketlist.items:
                     items = {}
@@ -392,9 +392,9 @@ class ItemView(Resource):
             if not bucketlist:
                     response = {
                                 'status': 'fail',
-                                'message': 'Bucketlist cannot be found'
+                                'message': 'You are not Authorized to view Items'
                                 }
-                    return (response), 404
+                    return (response), 403
             if item_id:
                 item = Item.query.filter_by(id=item_id, bucketlist_id=id).first()
 
