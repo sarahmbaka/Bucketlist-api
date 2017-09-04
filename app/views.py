@@ -252,7 +252,8 @@ class BucketlistView(Resource):
                         }
                 bucketlists_data.append(bucketlists)
             format_bucketlist = {
-                                    "bucketlists": bucketlists_data
+                                    "bucketlists": bucketlists_data,
+                                    "total": bucketlist.pages
             }
             return (format_bucketlist), 200
 
