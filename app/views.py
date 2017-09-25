@@ -214,8 +214,7 @@ class BucketlistView(Resource):
                                         'description': bucketlist.description,
                                         'created_on': str(bucketlist.created_on),
                                         'items': item_data
-                                      },
-                          "total": bucketlist.pages
+                                      }
                        }
             return (response), 200
         if args['q']:
