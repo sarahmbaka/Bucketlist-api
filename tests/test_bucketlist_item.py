@@ -7,7 +7,6 @@ from app import create_app, db
 from config import app_config
 
 app = create_app("testing")
-# app.config.from_object(app_config["testing"])
 
 class TestBucketlistItems(unittest.TestCase):
     """Test case for the authentication blueprint."""
@@ -61,7 +60,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlist.data.decode('utf8'))
-        self.assertEqual("Bucketlist BlackB Added!",
+        self.assertIn("Bucketlist BlackB Added!",
                          res_message['message'])
         self.assertEqual(res_bucketlist.status_code, 201)
 
@@ -69,7 +68,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Item SouthC has been added",
+        self.assertIn("Item SouthC has been added",
                          res_message['message'])
         self.assertEqual(res_bucketlist.status_code, 201)
 
@@ -83,7 +82,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Item SouthAfrica has been added",
+        self.assertIn("Item SouthAfrica has been added",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 201)
 
@@ -96,7 +95,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Bucketlist Item already exists!!",
+        self.assertIn("Bucketlist Item already exists!!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
 
@@ -110,7 +109,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Please provide a name!!",
+        self.assertIn("Please provide a name!!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 400)
 
@@ -124,7 +123,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Invalid token. Please log in again.",
+        self.assertIn("Invalid token. Please log in again.",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 401)
 
@@ -141,7 +140,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,content_type="application/json")
 
         self.assertEqual(res_bucketlistitems.status_code, 200)
-        
+
 
     def test_get_bucketlist_item_with_id(self):
         """Test that a user get all items."""
@@ -149,6 +148,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,content_type="application/json")
 
         self.assertEqual(res_bucketlistitems.status_code, 200)
+        self.assertEqual ((type(json.loads(res_bucketlistitems.data))), dict)
         self.assertTrue(len(json.loads(res_bucketlistitems.data)) > 0)
 
     def test_get_bucketlist_item_invalid_token(self):
@@ -165,7 +165,7 @@ class TestBucketlistItems(unittest.TestCase):
                                               ,headers=self.headers2
                                               ,content_type="application/json")
 
-        self.assertEqual(res_bucketlistitems.status_code, 404)
+        self.assertEqual(res_bucketlistitems.status_code, 403)
 
     def test_get_non_existent_bucketlist_item(self):
         """Test that a user get all items."""
@@ -184,7 +184,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Name cannot be empty!",
+        self.assertIn("Name cannot be empty!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
 
@@ -198,7 +198,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Bucketlist Item updated",
+        self.assertIn("Bucketlist Item updated",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 201)
 
@@ -212,7 +212,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Item does not exist!",
+        self.assertIn("Item does not exist!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 404)
 
@@ -226,10 +226,9 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Nothing to be updated!",
+        self.assertIn("Nothing to be updated!",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 409)
-
     def test_update_bucketlist_item_invalid_token(self):
         """Test that a user can  add."""
         bucketlistitem = {
@@ -240,7 +239,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Invalid token. Please log in again.",
+        self.assertIn("Invalid token. Please log in again.",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 401)
 
@@ -254,7 +253,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers2
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Bucketlist cannot be found",
+        self.assertIn("Bucketlist cannot be found",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 404)
 
@@ -264,9 +263,13 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Item succesfully deleted",
+        self.assertIn("Item succesfully deleted",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 200)
+
+        res_testbucketlist = self.client.get('/bucketlist/1/items/1',headers=self.headers
+                                          ,content_type="application/json")
+        self.assertEqual(res_testbucketlist.status_code, 404)
 
     def test_delete_non_existent_bucketlist_item(self):
         """Test that a user can  add."""
@@ -274,7 +277,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual(" Item not found ",
+        self.assertIn(" Item not found ",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 404)
 
@@ -284,7 +287,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers={'Authorization':'hjbjnbgjksngjvkdfnkj'}
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual("Invalid token. Please log in again.",
+        self.assertIn("Invalid token. Please log in again.",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 401)
 
@@ -294,7 +297,7 @@ class TestBucketlistItems(unittest.TestCase):
                                           ,headers=self.headers2
                                           ,content_type="application/json")
         res_message = json.loads(res_bucketlistitem.data.decode('utf8'))
-        self.assertEqual(" Item not found ",
+        self.assertIn(" Item not found ",
                          res_message['message'])
         self.assertEqual(res_bucketlistitem.status_code, 404)
 
